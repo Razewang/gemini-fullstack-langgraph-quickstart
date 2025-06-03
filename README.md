@@ -1,108 +1,108 @@
-# Gemini Fullstack LangGraph Quickstart
+# Gemini Fullstack LangGraph 快速入门
 
-This project demonstrates a fullstack application using a React frontend and a LangGraph-powered backend agent. The agent is designed to perform comprehensive research on a user's query by dynamically generating search terms, querying the web using Google Search, reflecting on the results to identify knowledge gaps, and iteratively refining its search until it can provide a well-supported answer with citations. This application serves as an example of building research-augmented conversational AI using LangGraph and Google's Gemini models.
+本项目演示了一个全栈应用程序，采用 React 前端和 LangGraph 驱动的后端代理。该代理旨在通过动态生成搜索词条、使用 Google 搜索查询网络、反思结果以识别知识差距，并迭代优化其搜索，直到能够提供有充分依据且附带引用的答案，从而对用户查询进行全面研究。此应用程序可作为使用 LangGraph 和 Google Gemini 模型构建研究增强型对话式人工智能的示例。
 
 ![Gemini Fullstack LangGraph](./app.png)
 
-## Features
+## 特性
 
-- 💬 Fullstack application with a React frontend and LangGraph backend.
-- 🧠 Powered by a LangGraph agent for advanced research and conversational AI.
-- 🔍 Dynamic search query generation using Google Gemini models.
-- 🌐 Integrated web research via Google Search API.
-- 🤔 Reflective reasoning to identify knowledge gaps and refine searches.
-- 📄 Generates answers with citations from gathered sources.
-- 🔄 Hot-reloading for both frontend and backend development during development.
+- 💬 全栈应用程序，包含 React 前端和 LangGraph 后端。
+- 🧠 由 LangGraph 代理提供支持，用于高级研究和对话式人工智能。
+- 🔍 使用 Google Gemini 模型动态生成搜索查询。
+- 🌐 通过 Google Search API 集成网络研究。
+- 🤔 反思性推理，以识别知识差距并优化搜索。
+- 📄 生成包含所收集来源引用的答案。
+- 🔄 在开发过程中为前端和后端开发提供热重载功能。
 
-## Project Structure
+## 项目结构
 
-The project is divided into two main directories:
+项目分为两个主要目录：
 
--   `frontend/`: Contains the React application built with Vite.
--   `backend/`: Contains the LangGraph/FastAPI application, including the research agent logic.
+- `frontend/`：包含使用 Vite 构建的 React 应用程序。
+- `backend/`：包含 LangGraph/FastAPI 应用程序，包括研究代理逻辑。
 
-## Getting Started: Development and Local Testing
+## 入门：开发和本地测试
 
-Follow these steps to get the application running locally for development and testing.
+请按照以下步骤在本地运行应用程序以进行开发和测试。
 
-**1. Prerequisites:**
+**1. 先决条件：**
 
--   Node.js and npm (or yarn/pnpm)
--   Python 3.8+
--   **`GEMINI_API_KEY`**: The backend agent requires a Google Gemini API key.
-    1.  Navigate to the `backend/` directory.
-    2.  Create a file named `.env` by copying the `backend/.env.example` file.
-    3.  Open the `.env` file and add your Gemini API key: `GEMINI_API_KEY="YOUR_ACTUAL_API_KEY"`
+- Node.js 和 npm (或 yarn/pnpm)
+- Python 3.8+
+- **`GEMINI_API_KEY`**：后端代理需要 Google Gemini API 密钥。
+    1. 导航到 `backend/` 目录。
+    2. 通过复制 `backend/.env.example` 文件创建一个名为 `.env` 的文件。
+    3. 打开 `.env` 文件并添加您的 Gemini API 密钥：`GEMINI_API_KEY="YOUR_ACTUAL_API_KEY"`
 
-**2. Install Dependencies:**
+**2. 安装依赖项：**
 
-**Backend:**
+**后端：**
 
 ```bash
 cd backend
 pip install .
 ```
 
-**Frontend:**
+**前端：**
 
 ```bash
 cd frontend
 npm install
 ```
 
-**3. Run Development Servers:**
+**3. 运行开发服务器：**
 
-**Backend & Frontend:**
+**后端和前端：**
 
 ```bash
 make dev
 ```
-This will run the backend and frontend development servers.    Open your browser and navigate to the frontend development server URL (e.g., `http://localhost:5173/app`).
+这将运行后端和前端开发服务器。 打开浏览器并导航到前端开发服务器 URL (例如, `http://localhost:5173/app`)。
 
-_Alternatively, you can run the backend and frontend development servers separately. For the backend, open a terminal in the `backend/` directory and run `langgraph dev`. The backend API will be available at `http://127.0.0.1:2024`. It will also open a browser window to the LangGraph UI. For the frontend, open a terminal in the `frontend/` directory and run `npm run dev`. The frontend will be available at `http://localhost:5173`._
+_或者，您可以分别运行后端和前端开发服务器。对于后端，在 `backend/` 目录中打开一个终端并运行 `langgraph dev`。后端 API 将在 `http://127.0.0.1:2024` 上可用。它还将打开一个浏览器窗口到 LangGraph UI。对于前端，在 `frontend/` 目录中打开一个终端并运行 `npm run dev`。前端将在 `http://localhost:5173` 上可用。_
 
-## How the Backend Agent Works (High-Level)
+## 后端代理工作原理 (高级概述)
 
-The core of the backend is a LangGraph agent defined in `backend/src/agent/graph.py`. It follows these steps:
+后端的的核心是在 `backend/src/agent/graph.py` 中定义的 LangGraph 代理。它遵循以下步骤：
 
 ![Agent Flow](./agent.png)
 
-1.  **Generate Initial Queries:** Based on your input, it generates a set of initial search queries using a Gemini model.
-2.  **Web Research:** For each query, it uses the Gemini model with the Google Search API to find relevant web pages.
-3.  **Reflection & Knowledge Gap Analysis:** The agent analyzes the search results to determine if the information is sufficient or if there are knowledge gaps. It uses a Gemini model for this reflection process.
-4.  **Iterative Refinement:** If gaps are found or the information is insufficient, it generates follow-up queries and repeats the web research and reflection steps (up to a configured maximum number of loops).
-5.  **Finalize Answer:** Once the research is deemed sufficient, the agent synthesizes the gathered information into a coherent answer, including citations from the web sources, using a Gemini model.
+1. **生成初始查询：** 根据您的输入，它使用 Gemini 模型生成一组初始搜索查询。
+2. **网络研究：** 对于每个查询，它使用带有 Google Search API 的 Gemini 模型来查找相关的网页。
+3. **反思和知识差距分析：** 代理分析搜索结果以确定信息是否充分或是否存在知识差距。它使用 Gemini 模型进行此反思过程。
+4. **迭代优化：** 如果发现差距或信息不足，它会生成后续查询并重复网络研究和反思步骤 (最多达到配置的最大循环次数)。
+5. **最终确定答案：** 一旦研究被认为足够，代理会将收集到的信息综合成一个连贯的答案，包括来自网络来源的引用，并使用 Gemini 模型。
 
-## Deployment
+## 部署
 
-In production, the backend server serves the optimized static frontend build. LangGraph requires a Redis instance and a Postgres database. Redis is used as a pub-sub broker to enable streaming real time output from background runs. Postgres is used to store assistants, threads, runs, persist thread state and long term memory, and to manage the state of the background task queue with 'exactly once' semantics. For more details on how to deploy the backend server, take a look at the [LangGraph Documentation](https://langchain-ai.github.io/langgraph/concepts/deployment_options/). Below is an example of how to build a Docker image that includes the optimized frontend build and the backend server and run it via `docker-compose`.
+在生产环境中，后端服务器提供优化的静态前端构建。LangGraph 需要一个 Redis 实例和一个 Postgres 数据库。Redis 用作发布/订阅代理，以启用来自后台运行的实时输出流。Postgres 用于存储助手、线程、运行、持久化线程状态和长期内存，并以“精确一次”语义管理后台任务队列的状态。有关如何部署后端服务器的更多详细信息，请参阅 [LangGraph 文档](https://langchain-ai.github.io/langgraph/concepts/deployment_options/)。以下是如何构建包含优化前端构建和后端服务器的 Docker 镜像并通过 `docker-compose` 运行它的示例。
 
-_Note: For the docker-compose.yml example you need a LangSmith API key, you can get one from [LangSmith](https://smith.langchain.com/settings)._
+_注意：对于 docker-compose.yml 示例，您需要一个 LangSmith API 密钥，您可以从 [LangSmith](https://smith.langchain.com/settings) 获取。_
 
-_Note: If you are not running the docker-compose.yml example or exposing the backend server to the public internet, you update the `apiUrl` in the `frontend/src/App.tsx` file your host. Currently the `apiUrl` is set to `http://localhost:8123` for docker-compose or `http://localhost:2024` for development._
+_注意：如果您没有运行 docker-compose.yml 示例或将后端服务器暴露给公共互联网，请更新 `frontend/src/App.tsx` 文件中的 `apiUrl` 为您的主机。目前，`apiUrl` 对于 docker-compose 设置为 `http://localhost:8123`，对于开发设置为 `http://localhost:2024`。_
 
-**1. Build the Docker Image:**
+**1. 构建 Docker 镜像：**
 
-   Run the following command from the **project root directory**:
+   从**项目根目录**运行以下命令：
    ```bash
    docker build -t gemini-fullstack-langgraph -f Dockerfile .
    ```
-**2. Run the Production Server:**
+**2. 运行生产服务器：**
 
    ```bash
    GEMINI_API_KEY=<your_gemini_api_key> LANGSMITH_API_KEY=<your_langsmith_api_key> docker-compose up
    ```
 
-Open your browser and navigate to `http://localhost:8123/app/` to see the application. The API will be available at `http://localhost:8123`.
+打开浏览器并导航到 `http://localhost:8123/app/` 以查看应用程序。API 将在 `http://localhost:8123` 上可用。
 
-## Technologies Used
+## 使用的技术
 
-- [React](https://reactjs.org/) (with [Vite](https://vitejs.dev/)) - For the frontend user interface.
-- [Tailwind CSS](https://tailwindcss.com/) - For styling.
-- [Shadcn UI](https://ui.shadcn.com/) - For components.
-- [LangGraph](https://github.com/langchain-ai/langgraph) - For building the backend research agent.
-- [Google Gemini](https://ai.google.dev/models/gemini) - LLM for query generation, reflection, and answer synthesis.
+- [React](https://reactjs.org/) (与 [Vite](https://vitejs.dev/) 一起使用) - 用于前端用户界面。
+- [Tailwind CSS](https://tailwindcss.com/) - 用于样式设计。
+- [Shadcn UI](https://ui.shadcn.com/) - 用于组件。
+- [LangGraph](https://github.com/langchain-ai/langgraph) - 用于构建后端研究代理。
+- [Google Gemini](https://ai.google.dev/models/gemini) - 用于查询生成、反思和答案综合的 LLM。
 
-## License
+## 许可证
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details. 
+本项目根据 Apache License 2.0 获得许可。有关详细信息，请参阅 [LICENSE](LICENSE) 文件。
